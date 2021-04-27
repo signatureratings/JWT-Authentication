@@ -1,0 +1,18 @@
+<% if(message){ %>
+<h3>Message :<%= message %></h3>
+<% }%>
+<form method="POST" action="/register">
+  <label for="username">Username</label>
+  <input type="text" id="username" name="username" required />
+  <br /><br />
+  <label for="email">Email</label>
+  <input type="text" id="email" name="email" required />
+  <br /><br />
+  <label for="password">password</label>
+  <input type="password" id="password" name="password" required />
+  <br /><br />
+  <button type="submit">Register</button>
+</form>
+
+<br />
+<a href="/login">Login to your account</a>
