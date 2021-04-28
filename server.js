@@ -10,6 +10,7 @@ const loginRouter = require('./routes/login')
 const jwt = require('jsonwebtoken')
 const userDetails = require('./models/registration')
 const mongoose = require('mongoose')
+const { mailRouter } = require('./routes/mail')
 
 //connecting to the database
 mongoose.connect(process.env.DATABASE_URL, {
@@ -36,7 +37,7 @@ app.get('/', validatetoken, async (req, res) => {
   if (req.user) {
     try {
       let check = await userDetails.findOne({ email: req.user })
-      if (check) {
+      if (check && check.emailVerified) {
         return res.status(200).render('index', { name: check.username })
       } else {
         return res.status(401).redirect('/login')
@@ -51,6 +52,7 @@ app.get('/', validatetoken, async (req, res) => {
 
 app.use('/register', registrationRouter)
 app.use('/login', loginRouter)
+app.use('/verifyemail', mailRouter)
 
 app.get('/logout', (req, res) => {
   console.log('logout executed')

@@ -52,11 +52,15 @@ registrationRouter.post('/', async (req, res) => {
         })
       }
       const token = generateAccessToken(req.body.email)
+      const url = process.env.URL || 'http://localhost:5000/'
+      link = `${url}verifyemail?token=${token}`
       let result = await userdetails.save()
       if (result) {
-        await mailsend(req.body.email, req.body.username)
+        await mailsend(req.body.email, req.body.username, link)
         res.cookie('SID', token, { maxAge: 1000 * 60 * 60 })
-        return res.status(200).redirect('/')
+        return res
+          .status(200)
+          .render('verifyemail', { name: req.body.username })
       }
     } catch (err) {
       console.log(err)
