@@ -6,6 +6,7 @@ const registrationRouter = express.Router()
 const jwt = require('jsonwebtoken')
 const userDetails = require('../models/registration')
 const bcrypt = require('bcrypt')
+const { mailsend } = require('./mail')
 
 registrationRouter.get('/', (req, res) => {
   console.log('registrationrouter will executed get method')
@@ -53,6 +54,7 @@ registrationRouter.post('/', async (req, res) => {
       const token = generateAccessToken(req.body.email)
       let result = await userdetails.save()
       if (result) {
+        await mailsend(req.body.email, req.body.username)
         res.cookie('SID', token, { maxAge: 1000 * 60 * 60 })
         return res.status(200).redirect('/')
       }
